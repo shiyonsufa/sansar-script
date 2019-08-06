@@ -1,4 +1,4 @@
-// © 2019 Linden Research, Inc.
+// Â© 2019 Linden Research, Inc.
 
 using Sansar.Script;
 using Sansar.Simulation;
@@ -36,10 +36,10 @@ public class MediaChatCommand : SceneObjectScript
             { "/vimeo", "[video-id]" },
         };
 
-        ScenePrivate.Chat.Subscribe(Chat.DefaultChannel, OnChat);
+        ScenePrivate.Chat.Subscribe(Chat.DefaultChannel, OnChat);          /////// start listening to chat NearBy, an Event maybe
     }
 
-    HashSet<string> SplitStringIntoHashSet(string commaSeparatedString)
+    HashSet<string> SplitStringIntoHashSet(string commaSeparatedString)  ///////////////// A Methode to convert commaSeprated names into the Hash
     {
         HashSet<string> hash = new HashSet<string>();
 
@@ -56,7 +56,7 @@ public class MediaChatCommand : SceneObjectScript
         return hash;
     }
 
-    bool IsAccessAllowed(AgentPrivate agent)
+    bool IsAccessAllowed(AgentPrivate agent)                          /////////////// a methode to check if the input agent is allowed
     {
         if (RestrictedAccess)
         {
@@ -65,10 +65,10 @@ public class MediaChatCommand : SceneObjectScript
             if (agent != null)
             {
                 // Always allow the creator of the scene
-                accessAllowed |= (agent.AgentInfo.AvatarUuid == ScenePrivate.SceneInfo.AvatarUuid);
+                accessAllowed |= (agent.AgentInfo.AvatarUuid == ScenePrivate.SceneInfo.AvatarUuid);      // check if u r admin
 
                 // Authenticate other allowed agents
-                accessAllowed |= _allowedAgents.Contains(agent.AgentInfo.Handle);
+                accessAllowed |= _allowedAgents.Contains(agent.AgentInfo.Handle);               // get an agent name
             }
 
             return accessAllowed;
@@ -79,21 +79,21 @@ public class MediaChatCommand : SceneObjectScript
 
     void OnChat(ChatData data)
     {
-        AgentPrivate agent = ScenePrivate.FindAgent(data.SourceId);
-        if (!IsAccessAllowed(agent))
+        AgentPrivate agent = ScenePrivate.FindAgent(data.SourceId);            // get the chat sender avatar name
+        if (!IsAccessAllowed(agent))                     // if you are not allowed then stop the code
             return;
 
-        string[] chatWords = data.Message.Split(' ');
+        string[] chatWords = data.Message.Split(' ');            // reconstructing the chat message
 
-        if (chatWords.Length < 1)
+        if (chatWords.Length < 1)           // stop the command if there is not command
             return;
 
-        string command = chatWords[0];
+        string command = chatWords[0];            // extract commands
 
-        if (!_commandsUsage.ContainsKey(command))
+        if (!_commandsUsage.ContainsKey(command))          //if the command is not in our list stop the code
             return;
 
-        if (command == "/help" || chatWords.Length < 2)
+        if (command == "/help" || chatWords.Length < 2)           // if command is Help then show a help list
         {
             string helpMessage = "MediaChatCommand usage:";
             foreach (var kvp in _commandsUsage)
@@ -101,9 +101,9 @@ public class MediaChatCommand : SceneObjectScript
                 helpMessage += "\n" + kvp.Key + " " + kvp.Value;
             }
 
-            try
-            {
-                agent.SendChat(helpMessage);
+            try                                                     // using TRY, CATCH!
+            {                                                       //
+                agent.SendChat(helpMessage);                        // send message to an agent (not name we need the agent type)
             }
             catch
             {
